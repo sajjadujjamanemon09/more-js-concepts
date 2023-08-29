@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 100px;
+  }
+  
+  #clock {
+    font-size: 36px;
+  }
+</style>
+</head>
+<body>
+  <div id="clock">00:00:00</div>
+  <button id="startTimer">Start Countdown</button>
+  <button id="stopTimer">Stop Countdown</button>
+
+<script>
+  let countdownInterval;
+  
+  function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    const currentTime = `${hours}:${minutes}:${seconds}`;
+    document.getElementById('clock').textContent = currentTime;
+  }
+  
+  function startCountdown(duration) {
+    clearInterval(countdownInterval);
+    
+    const endTime = Date.now() + duration * 1000;
+    updateCountdown(endTime);
+    
+    countdownInterval = setInterval(() => {
+      updateCountdown(endTime);
+    }, 1000);
+  }
+  
+  function updateCountdown(endTime) {
+    const currentTime = Date.now();
+    const remainingTime = Math.max(0, endTime - currentTime);
+    
+    const hours = String(Math.floor(remainingTime / 3600000)).padStart(2, '0');
+    const minutes = String(Math.floor((remainingTime % 3600000) / 60000)).padStart(2, '0');
+    const seconds = String(Math.floor((remainingTime % 60000) / 1000)).padStart(2, '0');
+    
+    const countdownTime = `${hours}:${minutes}:${seconds}`;
+    document.getElementById('clock').textContent = countdownTime;
+  }
+  
+  document.getElementById('startTimer').addEventListener('click', () => {
+    const duration = parseInt(prompt('Enter countdown duration in seconds:'));
+    if (!isNaN(duration)) {
+      startCountdown(duration);
+    }
+  });
+  
+  document.getElementById('stopTimer').addEventListener('click', () => {
+    clearInterval(countdownInterval);
+    updateClock();
+  });
+  
+  // Initial clock update
+  updateClock();
+</script>
+</body>
+</html>
